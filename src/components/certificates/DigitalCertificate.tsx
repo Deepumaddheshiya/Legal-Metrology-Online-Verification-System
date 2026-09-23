@@ -21,10 +21,59 @@ export const DigitalCertificate: React.FC<DigitalCertificateProps> = ({
   showActions = true,
 }) => {
   const [qrDataUrl, setQrDataUrl] = useState<string>("");
+  const [targetVerifyUrl, setTargetVerifyUrl] = useState<string>("");
 
   useEffect(() => {
-    const publicVerifyUrl = `${window.location.origin}/verify/${encodeURIComponent(certificate.certificateNumber)}?token=${certificate.verificationToken}`;
-    generateQRCodeDataUrl(publicVerifyUrl).then(setQrDataUrl);
+    let isMounted = true;
+
+    async function generateCode() {
+      let baseOrigin = typeof window !== "undefined" ? window.location.origin : "http://localhost:3000";
+
+      // If user is accessing from localhost/127.0.0.1 on PC, auto-resolve the local LAN/Wi-Fi IP
+      // so smartphones scanning the QR code on the screen can access the verification page over Wi-Fi
+      if (
+        typeof window !== "undefined" &&
+        (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+      ) {
+        try {
+          const res = await fetch("/api/system/network-ip");
+          if (res.ok) {
+            const data = await res.json();
+            if (data.ip && data.ip !== "localhost") {
+              const port = window.location.port ? `:${window.location.port}` : ":3000";
+              baseOrigin = `http://${data.ip}${port}`;
+            }
+          }
+        } catch {
+          // Keep current origin if fetch fails
+        }
+      }
+
+      // Sync certificate to server API so mobile devices scanning short URLs can find it
+      try {
+        fetch("/api/certificates", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(certificate),
+        }).catch(() => {});
+      } catch {}
+
+      // Clean short URL (ensures large, chunky QR pixels that phone cameras scan instantly!)
+      const formattedCertNum = encodeURIComponent(certificate.certificateNumber.replace(/\//g, "-"));
+      const publicVerifyUrl = `${baseOrigin}/verify/${formattedCertNum}`;
+
+      if (isMounted) {
+        setTargetVerifyUrl(publicVerifyUrl);
+        const url = await generateQRCodeDataUrl(publicVerifyUrl);
+        setQrDataUrl(url);
+      }
+    }
+
+    generateCode();
+
+    return () => {
+      isMounted = false;
+    };
   }, [certificate]);
 
   const handlePrint = () => {
@@ -198,15 +247,34 @@ export const DigitalCertificate: React.FC<DigitalCertificateProps> = ({
             {/* QR Code Verification */}
             <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
               {qrDataUrl ? (
-                <div className="p-1 bg-white border border-gray-300 rounded shadow-xs">
-                  <img src={qrDataUrl} alt="Certificate Verification QR Code" className="w-24 h-24" />
+                <div className="p-1.5 bg-white border border-gray-300 rounded shadow-xs">
+                  <img
+                    src={qrDataUrl}
+                    alt="Certificate Verification QR Code"
+                    className="w-28 h-28"
+                    style={{ imageRendering: "pixelated" }}
+                  />
                 </div>
               ) : (
-                <div className="w-24 h-24 bg-gray-100 animate-pulse rounded border border-gray-300" />
+                <div className="w-28 h-28 bg-gray-100 animate-pulse rounded border border-gray-300" />
               )}
-              <span className="text-[10px] text-gray-500 mt-1 font-mono">
-                Scan QR to verify validity
+              <span className="text-[10px] text-[#1E3A8A] font-bold mt-1 font-mono uppercase tracking-wide">
+                SCAN TO VERIFY
               </span>
+              <span className="text-[9px] text-gray-500">
+                Authenticity on National Portal
+              </span>
+              {targetVerifyUrl && (
+                <a
+                  href={targetVerifyUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[9px] text-blue-600 hover:underline max-w-[150px] truncate block font-mono mt-0.5 no-print"
+                  title={targetVerifyUrl}
+                >
+                  🔗 Open Verification Page
+                </a>
+              )}
             </div>
 
             {/* Seal Number */}

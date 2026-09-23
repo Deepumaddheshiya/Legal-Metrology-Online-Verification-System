@@ -242,7 +242,7 @@ export default function PublicComplaintsPage() {
                     <Label required>Your Full Name</Label>
                     <Input
                       required
-                      placeholder="e.g. Vikas Rao"
+                      placeholder="e.g. Kapil Gosavi"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                     />
@@ -251,7 +251,7 @@ export default function PublicComplaintsPage() {
                     <Label required>Mobile Number for Updates</Label>
                     <Input
                       required
-                      placeholder="+91 98200 00000"
+                      placeholder="+91 878 880 0483"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                     />

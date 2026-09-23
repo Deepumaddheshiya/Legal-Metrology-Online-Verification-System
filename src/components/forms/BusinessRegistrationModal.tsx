@@ -19,9 +19,9 @@ export const BusinessRegistrationModal: React.FC<BusinessRegistrationModalProps>
 }) => {
   const registerBusiness = useMockStore((s) => s.registerBusiness);
   const [step, setStep] = useState(1);
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("7208030455");
+  const [email, setEmail] = useState("deepu@a1supermarket.in");
+  const [fullName, setFullName] = useState("Deepu Bhai Maddheshiya");
   const [businessName, setBusinessName] = useState("");
   const [gstin, setGstin] = useState("");
   const [address, setAddress] = useState("");
@@ -66,21 +66,22 @@ export const BusinessRegistrationModal: React.FC<BusinessRegistrationModalProps>
 
     const st = INDIAN_STATES.find((s) => s.id === selectedState) || INDIAN_STATES[1];
     registerBusiness({
-      fullName: fullName || "Trader Applicant",
-      email: email || "trader@business.in",
-      phone: phone || "9821099887",
-      businessName: businessName || "Commercial Business Mart",
-      gstin: gstin || "27AABCA1234F1Z8",
-      address: address || "Commercial Complex, Shop 1",
+      fullName: fullName || "Deepu Bhai Maddheshiya",
+      email: email || "deepu@a1supermarket.in",
+      phone: phone || "7208030455",
+      businessName: businessName || "Deepu Supermarket & Retail",
+      address: address || "Shop 12, Main Market Road",
       city: city || "Mumbai",
       stateId: st.id,
       stateName: st.name,
       stateCode: st.code,
-      district: st.districts[0] || "Mumbai Suburban",
+      gstin: gstin || "27AABCA1234F1Z8",
     });
 
-    setIsLoading(false);
-    setIsDone(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      setIsDone(true);
+    }, 600);
   };
 
   return (
@@ -127,7 +128,7 @@ export const BusinessRegistrationModal: React.FC<BusinessRegistrationModalProps>
                 <Label required>Applicant Full Name</Label>
                 <Input
                   required
-                  placeholder="e.g. Ramesh Bhai Patel"
+                  placeholder="e.g. Deepu Bhai Maddheshiya"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                 />
@@ -138,7 +139,7 @@ export const BusinessRegistrationModal: React.FC<BusinessRegistrationModalProps>
                 <Input
                   required
                   type="email"
-                  placeholder="e.g. ramesh@a1supermarket.in"
+                  placeholder="e.g. deepu@a1supermarket.in"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -153,7 +154,7 @@ export const BusinessRegistrationModal: React.FC<BusinessRegistrationModalProps>
                   <Input
                     required
                     type="tel"
-                    placeholder="98210 99887"
+                    placeholder="7208030455"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                   />
@@ -178,7 +179,7 @@ export const BusinessRegistrationModal: React.FC<BusinessRegistrationModalProps>
               </div>
               <h4 className="text-sm font-bold text-gray-900">Enter 6-Digit OTP</h4>
               <p className="text-xs text-gray-500">
-                OTP sent to <strong className="text-gray-900">+91 {phone || "98210 99887"}</strong> (Demo OTP: <strong className="text-[#1E3A8A]">123456</strong>)
+                OTP sent to <strong className="text-gray-900">+91 {phone || "7208030455"}</strong> (Demo OTP: <strong className="text-[#1E3A8A]">123456</strong>)
               </p>
 
               <div className="flex justify-center gap-2 my-4">

@@ -165,7 +165,7 @@ export interface MockStoreState {
 export const useMockStore = create<MockStoreState>()(
   persist(
     (set, get) => ({
-      currentUser: MOCK_USERS[6], // Default to Business Owner (Ramesh Patel)
+      currentUser: MOCK_USERS[6], // Default to Business Owner (Deepu Bhai Maddheshiya)
       users: MOCK_USERS,
       instruments: MOCK_INSTRUMENTS,
       applications: MOCK_APPLICATIONS,
@@ -603,7 +603,7 @@ export const useMockStore = create<MockStoreState>()(
           const newLog: AuditLog = {
             id: `log-${Date.now()}`,
             userId: state.currentUser?.id || "usr-lmo-01",
-            userName: state.currentUser?.fullName || "Inspector S. K. Kulkarni",
+            userName: state.currentUser?.fullName || "Inspector Nadeem Khan",
             userRole: "Legal Metrology Officer",
             action: "SCHEDULE_VISIT",
             entityType: "Application",
@@ -1198,7 +1198,7 @@ export const useMockStore = create<MockStoreState>()(
       },
     }),
     {
-      name: "lmovs-mock-store-v2",
+      name: "lmovs-mock-store-v8",
       skipHydration: true,
     }
   )

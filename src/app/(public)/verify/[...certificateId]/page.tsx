@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +23,7 @@ import Link from "next/link";
 
 export default function PublicVerifyCertificatePage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const rawId = decodeURIComponent(
     Array.isArray(params?.certificateId)
       ? (params.certificateId as string[]).join("/")
@@ -33,7 +34,7 @@ export default function PublicVerifyCertificatePage() {
   const instruments = useMockStore((s) => s.instruments);
 
   const cleanQuery = rawId.replace(/-/g, "/").toLowerCase();
-  const cert = certificates.find(
+  let cert = certificates.find(
     (c) =>
       c.id.toLowerCase() === rawId.toLowerCase() ||
       c.certificateNumber.toLowerCase() === cleanQuery ||
@@ -41,9 +42,92 @@ export default function PublicVerifyCertificatePage() {
       (c.verificationToken && c.verificationToken.toLowerCase() === rawId.toLowerCase())
   );
 
-  const inst = cert ? instruments.find((i) => i.id === cert.instrumentId) : null;
+  // If not found in current device's local store (e.g. mobile phone scanning QR from PC),
+  // parse the encrypted/encoded payload passed in query params
+  if (!cert && searchParams) {
+    const dataParam = searchParams.get("data");
+    if (dataParam) {
+      try {
+        const p = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(dataParam)))));
+        cert = {
+          id: `cert-${p.num}`,
+          certificateNumber: p.num,
+          applicationId: "app-verified",
+          instrumentId: "inst-verified",
+          businessId: "biz-verified",
+          businessName: p.biz,
+          businessAddress: p.adr,
+          gstin: p.gst,
+          instrumentMake: p.mak,
+          instrumentModel: p.mod,
+          serialNumber: p.sn,
+          instrumentType: p.typ,
+          capacity: p.cap,
+          leastCount: p.lc,
+          locationOfUse: p.loc,
+          issuedByUserId: "officer",
+          issuedByName: p.by,
+          issuedByDesignation: p.des,
+          issuedByRole: "gatc",
+          sealNumber: p.seal,
+          issueDate: p.from,
+          validFrom: p.from,
+          validUntil: p.until,
+          qrCodeData: "",
+          status: p.st || "active",
+          verificationToken: p.tok,
+          sha256Hash: p.sha,
+          createdAt: p.from,
+        };
+      } catch (err) {
+        console.error("Could not parse cert data param", err);
+      }
+    }
+  }
 
-  if (!cert) {
+  const [serverCert, setServerCert] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    if (!cert && cleanQuery) {
+      fetch(`/api/certificates/${encodeURIComponent(cleanQuery)}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data && !data.error) {
+            setServerCert(data);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [cert, cleanQuery]);
+
+  const activeCert = cert || serverCert;
+  cert = activeCert;
+
+  const inst = activeCert
+    ? instruments.find((i) => i.id === activeCert.instrumentId) || {
+        id: "inst-scanned",
+        businessId: activeCert.businessId || "usr-biz-01",
+        businessName: activeCert.businessName,
+        ownerName: activeCert.businessName,
+        instrumentType: "weighing_scale" as const,
+        category: activeCert.instrumentType,
+        make: activeCert.instrumentMake,
+        model: activeCert.instrumentModel,
+        serialNumber: activeCert.serialNumber,
+        capacity: activeCert.capacity,
+        leastCount: activeCert.leastCount,
+        locationOfUse: activeCert.locationOfUse || activeCert.businessAddress,
+        installationDate: activeCert.validFrom,
+        status: "active" as const,
+        lastVerificationDate: activeCert.validFrom,
+        validUntil: activeCert.validUntil,
+        hasPendingApplication: false,
+        createdAt: activeCert.createdAt,
+        updatedAt: activeCert.createdAt,
+      }
+    : null;
+
+  if (!activeCert) {
     return (
       <div className="min-h-screen bg-gray-50 py-12 px-4 flex flex-col items-center">
         <div className="w-full max-w-xl space-y-6">

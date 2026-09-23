@@ -289,7 +289,7 @@ export default function OfficersDirectoryPage() {
                   </Label>
                   <Input
                     required
-                    placeholder={role === "lmo" ? "e.g. Inspector S. K. Kulkarni" : "e.g. Precision Metrology Testing Centre"}
+                    placeholder={role === "lmo" ? "e.g. Inspector Nadeem Khan" : "e.g. Precision Metrology Testing Centre"}
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     className="text-xs"

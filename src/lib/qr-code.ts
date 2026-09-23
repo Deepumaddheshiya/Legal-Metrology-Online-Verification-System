@@ -4,9 +4,9 @@ import type { Certificate } from "../types";
 export async function generateQRCodeDataUrl(text: string): Promise<string> {
   try {
     const dataUrl = await QRCode.toDataURL(text, {
-      errorCorrectionLevel: "M",
-      margin: 2,
-      width: 250,
+      errorCorrectionLevel: "L", // Lowest error correction = biggest modules = instant scan
+      margin: 1,
+      width: 320,
       color: {
         dark: "#1E3A8A", // LMOVS Primary Navy Blue
         light: "#FFFFFF",
@@ -34,8 +34,13 @@ export async function generateCertificateQrDataUrl(
     verificationToken = certificateOrNumber.verificationToken;
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_QR_VERIFICATION_URL || "https://lmovs.gov.in/verify";
-  const verifyUrl = `${baseUrl}/${certNumber}?token=${verificationToken}`;
+  const baseUrl =
+    process.env.NEXT_PUBLIC_QR_VERIFICATION_URL ||
+    (typeof window !== "undefined"
+      ? `${window.location.origin}/verify`
+      : "http://192.168.0.103:3000/verify");
+  const formattedCert = encodeURIComponent(certNumber.replace(/\//g, "-"));
+  const verifyUrl = `${baseUrl}/${formattedCert}?token=${verificationToken}`;
   return generateQRCodeDataUrl(verifyUrl);
 }
 

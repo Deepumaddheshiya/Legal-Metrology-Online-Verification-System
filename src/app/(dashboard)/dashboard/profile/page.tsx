@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,9 +21,17 @@ import {
 export default function ProfilePage() {
   const { currentUser, setUser } = useAuthStore();
 
-  const [fullName, setFullName] = useState(currentUser?.fullName || "Aisik Business Owner");
-  const [phone, setPhone] = useState(currentUser?.phone || "9820012345");
+  const [fullName, setFullName] = useState(currentUser?.fullName || "Dr. Mitesh Lohar, IAS");
+  const [phone, setPhone] = useState(currentUser?.phone || "7506569812");
   const [address, setAddress] = useState(currentUser?.address || "Plot 42, MIDC Industrial Area, Andheri East, Mumbai 400093");
+
+  useEffect(() => {
+    if (currentUser) {
+      setFullName(currentUser.fullName || "");
+      setPhone(currentUser.phone || "");
+      if (currentUser.address) setAddress(currentUser.address);
+    }
+  }, [currentUser]);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [profileSuccess, setProfileSuccess] = useState<string | null>(null);
 

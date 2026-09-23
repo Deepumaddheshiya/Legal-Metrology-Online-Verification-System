@@ -132,7 +132,7 @@ export async function syncOfflineInspections(): Promise<{
         defectsFound: item.defectsFound || "",
         verifierSealNumber: item.verifierSealNumber || `SEAL-${Date.now().toString().slice(-4)}`,
         photos: item.photos,
-        inspectorName: "Inspector S. K. Kulkarni (LMO Pune)",
+        inspectorName: "Inspector Nadeem Khan (LMO Pune)",
         inspectorDesignation: "Legal Metrology Officer",
       });
       synced++;

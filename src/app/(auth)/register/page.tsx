@@ -92,12 +92,12 @@ export default function RegisterPage() {
     resolver: zodResolver(registerSchema),
     mode: "onTouched",
     defaultValues: {
-      fullName: "Rajesh Sharma",
-      email: "rajesh@sharmaindustries.in",
+      fullName: "Deepu Maddheshiya",
+      email: "deepu@maddheshiyaindustries.in",
       password: "Password@123",
       confirmPassword: "Password@123",
-      phone: "9820011223",
-      businessName: "Sharma Precision Weighing Works",
+      phone: "7208030455",
+      businessName: "Maddheshiya Precision Weighing Works",
       gstin: "27AAACS1429B1ZB",
       tradeLicenseNumber: "TL-MH-2026-9812",
       address: "Plot 88, Wagle Estate, Road No 16",
@@ -289,7 +289,7 @@ export default function RegisterPage() {
                   <div>
                     <Label required className="text-xs">Applicant Full Name</Label>
                     <Input
-                      placeholder="e.g. Ramesh Patel"
+                      placeholder="e.g. Deepu Maddheshiya"
                       error={errors.fullName?.message}
                       className="text-xs"
                       {...register("fullName")}

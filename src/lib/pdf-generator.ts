@@ -123,7 +123,7 @@ export async function generateCertificatePdf(options: GeneratePdfOptions): Promi
   const validFrom = typeof certificate.validFrom === "string" ? certificate.validFrom : new Date(certificate.validFrom || certificate.issueDate).toISOString().split("T")[0];
   const validUntil = typeof certificate.validUntil === "string" ? certificate.validUntil : new Date(certificate.validUntil).toISOString().split("T")[0];
   const sealNumber = certificate.sealNumber || "IND-LM-VERIFIED-2026";
-  const officerName = certificate.issuedByUser?.fullName || certificate.issuedByName || "Inspector S. K. Kulkarni";
+  const officerName = certificate.issuedByUser?.fullName || certificate.issuedByName || "Inspector Nadeem Khan";
 
   // Details Table 3: Statutory Validity Period
   const finalY2 = (doc as any).lastAutoTable.finalY || 155;

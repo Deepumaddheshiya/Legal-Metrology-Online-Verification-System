@@ -148,11 +148,10 @@ export default function StateAdministrationsPage() {
                   </span>
                 </div>
                 {controller ? (
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                    controller.status === "active"
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${controller.status === "active"
                       ? "bg-emerald-100 text-emerald-800"
                       : "bg-red-100 text-red-800"
-                  }`}>
+                    }`}>
                     {controller.status}
                   </span>
                 ) : (
@@ -251,7 +250,7 @@ export default function StateAdministrationsPage() {
                 <Label required className="text-xs">Officer Full Name</Label>
                 <Input
                   required
-                  placeholder="e.g. Dr. Rajesh K. Patil"
+                  placeholder="e.g. Dr. Mitesh Lohar, IAS"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   className="text-xs"
