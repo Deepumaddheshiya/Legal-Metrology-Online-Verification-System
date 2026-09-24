@@ -117,11 +117,6 @@ export default function PublicVerifyCertificatePage() {
   const activeCert = cert || serverCert;
   cert = activeCert;
 
-  // FIX: make sure cert is defined before using it
-  if (!cert) {
-    return null;
-  }
-
   const inst = activeCert
     ? instruments.find((i) => i.id === activeCert.instrumentId) || {
       id: "inst-scanned",
@@ -147,7 +142,7 @@ export default function PublicVerifyCertificatePage() {
     }
     : null;
 
-  if (!activeCert) {
+  if (!activeCert || !cert) {
     return (
       <div className="min-h-screen bg-gray-50 py-12 px-4 flex flex-col items-center">
         <div className="w-full max-w-xl space-y-6">
