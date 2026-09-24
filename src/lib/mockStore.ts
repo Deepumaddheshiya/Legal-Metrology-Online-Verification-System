@@ -58,7 +58,7 @@ export interface MockStoreState {
     stateId?: string;
     stateName?: string;
     stateCode?: string;
-    district: string;
+    district?: string;
     pincode?: string;
   }) => User;
   approveTrader: (userId: string) => void;

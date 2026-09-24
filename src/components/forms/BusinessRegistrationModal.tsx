@@ -72,6 +72,7 @@ export const BusinessRegistrationModal: React.FC<BusinessRegistrationModalProps>
       businessName: businessName || "Deepu Supermarket & Retail",
       address: address || "Shop 12, Main Market Road",
       city: city || "Mumbai",
+      district: city || "Mumbai",
       stateId: st.id,
       stateName: st.name,
       stateCode: st.code,
