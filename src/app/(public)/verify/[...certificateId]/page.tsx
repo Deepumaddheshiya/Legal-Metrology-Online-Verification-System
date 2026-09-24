@@ -2,7 +2,12 @@
 
 import React from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
@@ -112,6 +117,11 @@ export default function PublicVerifyCertificatePage() {
   const activeCert = cert || serverCert;
   cert = activeCert;
 
+  // FIX: make sure cert is defined before using it
+  if (!cert) {
+    return null;
+  }
+
   const inst = activeCert
     ? instruments.find((i) => i.id === activeCert.instrumentId) || {
       id: "inst-scanned",
@@ -189,7 +199,7 @@ export default function PublicVerifyCertificatePage() {
     );
   }
 
-  // FIX: safely access cert properties
+  // Safely check certificate status and validity
   const isExpired =
     cert?.status === "expired" ||
     (!!cert?.validUntil && new Date(cert.validUntil) < new Date());
