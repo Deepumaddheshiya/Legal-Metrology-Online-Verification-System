@@ -1,4 +1,4 @@
-# Legal Metrology Online Verification System (LMOVS)
+# Legal Metrology Online Verification System (LMOVS) SIH
 
 > **Smart India Hackathon (SIH) Project** — *Development of an Online Verification System for Weighing and Measuring Instruments*
 
